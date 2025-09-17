@@ -102,7 +102,7 @@
     <dependency>
       <groupId>jakarta.activation</groupId>
       <artifactId>jakarta.activation-api</artifactId>
-      <optional>true</optional>
+      <!-- Required for ActivationDataFlavorConverter -->
     </dependency>
     <dependency>
       <groupId>jakarta.xml.bind</groupId>

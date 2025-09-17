@@ -21,7 +21,7 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 import java.io.InputStream;
 import java.util.Properties;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;

@@ -12,7 +12,7 @@ package com.thoughtworks.xstream.converters.extended;
 
 import java.awt.datatransfer.DataFlavor;
 
-import javax.activation.ActivationDataFlavor;
+import jakarta.activation.ActivationDataFlavor;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
