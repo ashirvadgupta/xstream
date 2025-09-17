@@ -24,6 +24,7 @@ public class ActivationDataFlavorConverterTest extends AbstractAcceptanceTest {
     protected void setupSecurity(XStream xstream) {
         super.setupSecurity(xstream);
         xstream.allowTypeHierarchy(DataFlavor.class);
+        xstream.allowTypes(ActivationDataFlavor.class);
     }
 
     public void testMimeTypeOnly() {

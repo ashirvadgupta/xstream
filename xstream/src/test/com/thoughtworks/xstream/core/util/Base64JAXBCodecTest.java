@@ -17,8 +17,23 @@ import com.thoughtworks.xstream.core.StringCodec;
 public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
 
     private StringCodec encoder = new Base64JAXBCodec();
+    private boolean jaxbRequired = false;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        try {
+            Class.forName("jakarta.xml.bind.DatatypeConverter");
+            jaxbRequired = true;
+        } catch (final ClassNotFoundException e) {
+            // expected
+        }
+    }
 
     public void testEncodesEntireByteArrayAsString() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = "hello world".getBytes();
         final String expected = "aGVsbG8gd29ybGQ=";
         assertEquals(expected, encoder.encode(input));
@@ -26,6 +41,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testModeWithoutLineWraps() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] =
                 "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
                     .getBytes();
@@ -36,6 +54,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testDecodesLinesWithLF() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte data[] =
                 "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
                     .getBytes();
@@ -45,6 +66,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testDecodesLinesWithCRLF() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte data[] =
                 "hello world. hello world. hello world. hello world. hello world. hello world. hello world. "
                     .getBytes();
@@ -54,12 +78,18 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testDecodesShortLines() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte data[] = "hello world".getBytes();
         final String input = "aGVs\nbG8g\nd29y\nbGQ=";
         assertByteArrayEquals(data, encoder.decode(input));
     }
 
     public void testPadsSingleMissingByteWhenNotMultipleOfThree() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = {1, 2, 3, 4, 5};
         final String expected = "AQIDBAU=";
         assertEquals(expected, encoder.encode(input));
@@ -67,6 +97,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testPadsDoubleMissingByteWhenNotMultipleOfThree() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = {1, 2, 3, 4};
         final String expected = "AQIDBA==";
         assertEquals(expected, encoder.encode(input));
@@ -74,6 +107,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testDoesNotPadWhenMultipleOfThree() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = {1, 2, 3, 4, 5, 6};
         final String expected = "AQIDBAUG";
         assertEquals(expected, encoder.encode(input));
@@ -81,6 +117,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testHandlesAllPositiveBytes() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = new byte[127];
         for (int i = 0; i < 126; i++) {
             input[i] = (byte)(i + 1);
@@ -93,6 +132,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testHandlesAllNegativeBytes() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = new byte[128];
         for (int i = 0; i < 127; i++) {
             input[i] = (byte)(-1 - i);
@@ -105,6 +147,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testHandlesZeroByte() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = {0, 0, 0, 0};
         final String expected = "AAAAAA==";
         assertEquals(expected, encoder.encode(input));
@@ -112,6 +157,9 @@ public class Base64JAXBCodecTest extends AbstractAcceptanceTest {
     }
 
     public void testProducesEmptyStringWhenNoBytesGiven() {
+        if (!jaxbRequired) {
+            return;
+        }
         final byte input[] = new byte[0];
         final String expected = "";
         assertEquals(expected, encoder.encode(input));

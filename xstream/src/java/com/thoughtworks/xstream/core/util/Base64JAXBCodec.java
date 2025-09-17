@@ -28,7 +28,7 @@ public class Base64JAXBCodec implements StringCodec {
 
     @Override
     public byte[] decode(final String base64) {
-        return DatatypeConverter.parseBase64Binary(base64);
+        return DatatypeConverter.parseBase64Binary(base64.replace("\n", "").replace("\r", ""));
     }
 
     @Override
