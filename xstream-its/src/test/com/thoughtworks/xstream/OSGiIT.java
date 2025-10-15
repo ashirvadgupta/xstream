@@ -21,8 +21,6 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 import java.io.InputStream;
 import java.util.Properties;
 
-import jakarta.inject.Inject;
-
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -41,7 +39,10 @@ import org.junit.runner.RunWith;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
 public class OSGiIT {
-    @Inject
+    // Support both javax.inject and jakarta.inject
+    @SuppressWarnings("deprecation")
+    @javax.inject.Inject
+    @jakarta.inject.Inject
     BundleContext bundleContext;
 
     @SuppressWarnings("javadoc")

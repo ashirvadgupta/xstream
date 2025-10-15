@@ -102,12 +102,28 @@
     <dependency>
       <groupId>jakarta.activation</groupId>
       <artifactId>jakarta.activation-api</artifactId>
-      <!-- Required for ActivationDataFlavorConverter -->
+      <version>${version.activation.api.jakarta}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <scope>provided</scope><!-- only required for compilation with Java 11 or higher, but only used by Java 7 or below -->
+      <version>${version.xml.bind.api.jakarta}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Javax EE API dependencies for backward compatibility -->
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>javax.activation-api</artifactId>
+      <version>${version.activation.api.javax}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>${version.xml.bind.api.javax}</version>
+      <optional>true</optional>
     </dependency>
 
     <!-- test-scoped -->
@@ -142,6 +158,7 @@
     <dependency>
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>jaxws-rt</artifactId>
+      <version>${version.xml.ws.jaxws.rt.jakarta}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -190,6 +207,15 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version> <!-- Use the same version as the parent POM's pluginManagement -->
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -245,6 +271,20 @@
                 </manifestEntries>
               </archive>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Re-enable Javadoc plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -388,7 +428,7 @@
               <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.api}</version>
+                <version>${version.xml.bind.api.jakarta}</version>
               </dependency>
             </dependencies>
           </plugin>

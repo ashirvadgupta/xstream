@@ -19,6 +19,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>xstream-its</artifactId>
+  <packaging>jar</packaging>
   <name>XStream ITs</name>
   <description>Integration tests for XStream.</description>
 
@@ -71,17 +72,45 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>javax</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>jakarta</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
+      <scope>test</scope>
     </dependency>
 
-    <!-- test dependencies -->
+    <!-- Support both javax.inject and jakarta.inject -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>jakarta.inject</groupId>
       <artifactId>jakarta.inject-api</artifactId>
+      <scope>test</scope>
     </dependency>
+
+    <!-- test dependencies -->
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.framework</artifactId>

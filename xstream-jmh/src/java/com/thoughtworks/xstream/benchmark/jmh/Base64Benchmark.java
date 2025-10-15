@@ -15,7 +15,9 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.xml.bind.DatatypeConverter;
+import com.thoughtworks.xstream.core.StringCodec;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
+import com.thoughtworks.xstream.core.util.PlatformDependentTypeFactory;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -28,9 +30,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-
-import com.thoughtworks.xstream.core.StringCodec;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 
 /**
@@ -94,12 +93,12 @@ public class Base64Benchmark {
 
             @Override
             public byte[] decode(final String base64) {
-                return DatatypeConverter.parseBase64Binary(base64);
+                return PlatformDependentTypeFactory.parseBase64Binary(base64);
             }
 
             @Override
             public String encode(final byte[] data) {
-                return DatatypeConverter.printBase64Binary(data);
+                return PlatformDependentTypeFactory.printBase64Binary(data);
             }
 
         },

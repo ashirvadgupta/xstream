@@ -10,8 +10,6 @@
  */
 package com.thoughtworks.xstream.core.util;
 
-import jakarta.xml.bind.DatatypeConverter;
-
 import com.thoughtworks.xstream.core.Base64Codec;
 import com.thoughtworks.xstream.core.StringCodec;
 
@@ -28,11 +26,11 @@ public class Base64JAXBCodec implements StringCodec {
 
     @Override
     public byte[] decode(final String base64) {
-        return DatatypeConverter.parseBase64Binary(base64.replace("\n", "").replace("\r", ""));
+        return PlatformDependentTypeFactory.parseBase64Binary(base64.replace("\n", "").replace("\r", ""));
     }
 
     @Override
     public String encode(final byte[] data) {
-        return DatatypeConverter.printBase64Binary(data);
+        return PlatformDependentTypeFactory.printBase64Binary(data);
     }
 }

@@ -10,18 +10,19 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import jakarta.activation.ActivationDataFlavor;
-
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.core.util.PlatformDependentTypeFactory;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
- * Converts an {@link ActivationDataFlavor}.
+ * Converts an ActivationDataFlavor (both javax.activation and jakarta.activation).
  *
  * @author J&ouml;rg Schaible
  * @since 1.4.9
@@ -30,25 +31,40 @@ public class ActivationDataFlavorConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
-        return type == ActivationDataFlavor.class;
+        return type == PlatformDependentTypeFactory.getActivationDataFlavorType();
     }
 
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final ActivationDataFlavor dataFlavor = ActivationDataFlavor.class.cast(source);
-        final String mimeType = dataFlavor.getMimeType();
+        final Object dataFlavor = PlatformDependentTypeFactory.getActivationDataFlavorType().cast(source);
+        final String mimeType;
+        try {
+            mimeType = (String) dataFlavor.getClass().getMethod("getMimeType").invoke(dataFlavor);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ConversionException(e);
+        }
         if (mimeType != null) {
             writer.startNode("mimeType");
             writer.setValue(mimeType);
             writer.endNode();
         }
-        final String name = dataFlavor.getHumanPresentableName();
+        final String name;
+        try {
+            name = (String) dataFlavor.getClass().getMethod("getHumanPresentableName").invoke(dataFlavor);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ConversionException(e);
+        }
         if (name != null) {
             writer.startNode("humanRepresentableName");
             writer.setValue(name);
             writer.endNode();
         }
-        final Class<?> representationClass = dataFlavor.getRepresentationClass();
+        final Class<?> representationClass;
+        try {
+            representationClass = (Class<?>) dataFlavor.getClass().getMethod("getRepresentationClass").invoke(dataFlavor);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ConversionException(e);
+        }
         if (representationClass != null) {
             writer.startNode("representationClass");
             context.convertAnother(representationClass);
@@ -78,14 +94,14 @@ public class ActivationDataFlavorConverter implements Converter {
             }
             reader.moveUp();
         }
-        ActivationDataFlavor dataFlavor = null;
+        Object dataFlavor = null;
         try {
             if (type == null) {
-                dataFlavor = new ActivationDataFlavor(mimeType, name);
+                dataFlavor = PlatformDependentTypeFactory.createActivationDataFlavor(mimeType, name);
             } else if (mimeType == null) {
-                dataFlavor = new ActivationDataFlavor(type, name);
+                dataFlavor = PlatformDependentTypeFactory.createActivationDataFlavor(type, name);
             } else {
-                dataFlavor = new ActivationDataFlavor(type, mimeType, name);
+                dataFlavor = PlatformDependentTypeFactory.createActivationDataFlavor(type, mimeType, name);
             }
         } catch (final IllegalArgumentException | NullPointerException ex) {
             throw new ConversionException(ex);
