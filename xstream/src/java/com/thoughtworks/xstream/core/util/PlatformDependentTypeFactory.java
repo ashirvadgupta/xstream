@@ -107,7 +107,7 @@ public class PlatformDependentTypeFactory {
 
     public static byte[] parseBase64Binary(String lexicalXsBase64Binary) {
         if (datatypeConverterType == null) {
-            return null;
+            throw new ConversionException("Neither jakarta.xml.bind.DatatypeConverter nor javax.xml.bind.DatatypeConverter is available on the classpath");
         }
         try {
             return (byte[]) datatypeConverterType.getMethod("parseBase64Binary", String.class).invoke(null, lexicalXsBase64Binary);
@@ -118,7 +118,7 @@ public class PlatformDependentTypeFactory {
 
     public static String printBase64Binary(byte[] val) {
         if (datatypeConverterType == null) {
-            return null;
+            throw new ConversionException("Neither jakarta.xml.bind.DatatypeConverter nor javax.xml.bind.DatatypeConverter is available on the classpath");
         }
         try {
             return (String) datatypeConverterType.getMethod("printBase64Binary", byte[].class).invoke(null, val);
